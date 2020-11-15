@@ -1,0 +1,1 @@
+# AI-confessions-generator
