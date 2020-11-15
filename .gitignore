@@ -1,0 +1,5 @@
+venv/
+**.pyc
+
+# Data has not been pushed for privacy reasons
+confessions.txt
