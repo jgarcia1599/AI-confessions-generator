@@ -20,8 +20,7 @@ def process_text(text):
     clean_text = ' '.join([str for str in text.split() if not any(i in str for i in emoji_list)])
     processed_text = ''
     try:
-        processed_text = re.split('"', clean_text)[1]
-        
+        processed_text = re.split('"', clean_text)[1]       
     except:
         pass
     return processed_text
