@@ -13,7 +13,7 @@ import emoji
 import io
 import re
 
-filename = 'confessions.txt'
+filename = 'cc.txt'
 def process_text(text):
     allchars = [str for str in text]
     emoji_list = [c for c in allchars if c in emoji.UNICODE_EMOJI]
@@ -26,14 +26,19 @@ def process_text(text):
     return processed_text
 
 posts = []
-for post in get_posts('NYUAD-Crushes-and-Compliments-1185494961476520', pages=400):
-    # remove emojis from text
-    clean_text = process_text(post['text'])
-    
-    if clean_text != '':
-        posts.append(clean_text)
-    # save cleantext in .txt file
 with io.open(filename, 'w', encoding="utf-8") as out_file:
-#     print(give_emoji_free_text(clean_text),file=f)
-    for post in posts:
-        out_file.write(post + '\n\n\n\n\n')
+    for post in get_posts('NYUAD-Crushes-and-Compliments-1185494961476520', pages=400):
+        # remove emojis from text
+        # print(post)
+        clean_text = process_text(post['text'])
+        # print(clean_text)
+        
+        if clean_text != '':
+            print(clean_text)
+            out_file.write(clean_text + '\n')
+    # save cleantext in .txt file
+# with io.open(filename, 'w', encoding="utf-8") as out_file:
+# #     print(give_emoji_free_text(clean_text),file=f)
+#     for post in posts:
+#         print(post)
+#         out_file.write(post + '\n')
