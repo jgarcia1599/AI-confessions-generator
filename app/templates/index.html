@@ -36,7 +36,7 @@
 	     <br>
 	     <br>
 	     <br>
-	     <p id="result">Result will go heree.....</p>
+	     <p id="result"style="white-space:pre-line;">Result will go heree.....</p>
 		</form>
 
        </div>
@@ -60,14 +60,20 @@
         dataType: "json",
         data: JSON.stringify(getInputValues()),
         success: function (data) {
-          var gentext = data.text;
+         var gentext = data.text;
+	//$('result').text = "";
 	var filtered_text="";
+	var previous = 'i';
 	for (var i = 0;i<gentext.length;i++){
 		if (gentext[i]!=""){
-		filtered_text+=gentext[i];	
+		filtered_text+=gentext[i]+'\n';	
 		}
-		
+		else if(gentext[i]=="" && previous !=""){
+		filtered_text+='\n';
+		}
+		previous = gentext[i]
 	}	
+	console.log(filtered_text);
 	$('#result').text(filtered_text);	
          // var html = '<div>' + gentext + '</div>';
          // $(html).appendTo('body');
