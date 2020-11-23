@@ -29,11 +29,15 @@
               </div>
               <div class="slidecontainer">
                 <p>How realistic do you want the statement to be (aka "Temperature")?</p>
-                <p id="temp">0</p>
-                <input type="range" min="0" max="1" value="50" default="0.5" id = 'temperature'>
+                <p id="temp">0.5</p>
+                <input type="range" min="0" max="1" step="0.01" default="0.5" id = 'temperature'>
             </div>
-            <button type="submit" class="btn btn-primary">Generate NYUAD statement!</button>
-	</form>
+             <button type="submit" class="btn btn-primary">Generate NYUAD statement!</button>
+	     <br>
+	     <br>
+	     <br>
+	     <p id="result">Result will go heree.....</p>
+		</form>
 
        </div>
 
@@ -42,7 +46,12 @@
         <![endif]-->
         
         <script type="text/javascript">
-	  $(function () {
+	$(function () {
+	$('#temperature').bind("change",function(){
+		$('#temp').text($('#temperature').val());
+		
+		
+	})
     $('#gen-form').submit(function (e) {
       e.preventDefault();
       $.ajax({
@@ -52,8 +61,16 @@
         data: JSON.stringify(getInputValues()),
         success: function (data) {
           var gentext = data.text;
-          var html = '<div>' + gentext + '</div>';
-          $(html).appendTo('body');
+	var filtered_text="";
+	for (var i = 0;i<gentext.length;i++){
+		if (gentext[i]!=""){
+		filtered_text+=gentext[i];	
+		}
+		
+	}	
+	$('#result').text(filtered_text);	
+         // var html = '<div>' + gentext + '</div>';
+         // $(html).appendTo('body');
 	  console.log(gentext);
         },
         error: function (jqXHR, textStatus, errorThrown) {
