@@ -10,6 +10,59 @@
         <!-- CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
+        <style>
+          .loader {
+              border: 16px solid #f3f3f3;
+              border-radius: 50%;
+              border-top: 16px solid #3498db;
+              width: 120px;
+              height: 120px;
+              -webkit-animation: spin 2s linear infinite; /* Safari */
+              animation: spin 2s linear infinite;
+            }
+            
+            /* Safari */
+            @-webkit-keyframes spin {
+              0% { -webkit-transform: rotate(0deg); }
+              100% { -webkit-transform: rotate(360deg); }
+            }
+            
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            #loadercontainer{
+              display: none;
+            }
+            .flexbox{
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            #textwaiting{
+              display:none;
+            }
+            #resultscontainer{
+              border-radius: 25px;
+              border:solid;
+              display: none;
+              border-color: #8900e1;
+            }
+            a{
+              color:#8900e1;
+
+            }
+            button{
+              color:#8900e1;
+
+            }
+            h1{
+              color:#8900e1;
+
+            }
+
+        </style>
+
         <!-- jQuery and JS bundle w/ Popper.js -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
@@ -19,27 +72,34 @@
     </head>
     <body>
         <div class=" container text-center">
-            <h1>Generating realistic-looking NYUAD behavior</h1>
-            <p>NYUAD students go through several problems that affect their day to day. Whether it is the shock of seeing a beautiful person sitting across from them in D2, the ever-increasing batch of grad school and job applications, a new controversial rumor jumping from ear to ear, or a global pandemic, NYUAD students have relied on online platforms like <a href="">NYUAD Confessions</a> and  <a href="">NYUAD Crushes and Compliments</a> to express their viewpoints/emotions/dissapointments about the world around them.</p> 
-            <p>Using Artificial Intelligence and Natural Language Processing, we were able to train a model using Confessions and Crushes and Compliments data to generate text that sounds like an NYUAD student.</p>
+            <h1>Crushes and Compliments Generator</h1>
+            <p>NYUAD students go through several problems that affect their day to day. Whether it is the shock of seeing a beautiful person sitting across from them in D2, the ever-increasing batch of grad school and job applications, a new controversial rumor jumping from ear to ear, or a global pandemic, NYUAD students have relied on online platforms like <a href="https://www.facebook.com/NYUAD-Crushes-and-Compliments-1185494961476520/">NYUAD Crushes and Compliments</a> to express their viewpoints/emotions/dissapointments about the world around them.</p> 
+            <p>Using Artificial Intelligence and Natural Language Processing, we were able to finetune a <a href="https://openai.com/blog/gpt-2-1-5b-release/">GPT-2 model</a> using Crushes and Compliments data to generate text that sounds like an NYUAD student.</p>
             <div class="form-group">
-		<form id = "gen-form">
-                <label for="exampleFormControlTextarea1">Please write some starting text below</label>
-                <textarea class="form-control" id="prefix" rows="3"></textarea>
+		        <form id = "gen-form">
+                  <label for="exampleFormControlTextarea1">Please write some starting text below</label>
+                  <textarea class="form-control" id="prefix" rows="3"></textarea>
+                </div>
+                <div class="slidecontainer" id="sliderstuff">
+                  <p>How realistic do you want the statement to be (aka "Temperature")?</p>
+                  <p id="temp">0.5</p>
+                  <input style="color:#8900e1;" type="range" min="0" max="1" step="0.01" default="0.5" id = 'temperature'>
               </div>
-              <div class="slidecontainer">
-                <p>How realistic do you want the statement to be (aka "Temperature")?</p>
-                <p id="temp">0.5</p>
-                <input type="range" min="0" max="1" step="0.01" default="0.5" id = 'temperature'>
-            </div>
-             <button type="submit" class="btn btn-primary">Generate NYUAD statement!</button>
-	     <br>
-	     <br>
-	     <br>
-	     <p id="result"style="white-space:pre-line;">Result will go heree.....</p>
-		</form>
+              <button type="submit" class="btn btn-primary" style="background-color:#8900e1;" id="submitbutton">Generate NYUAD statement!</button>
+                <br>
+                <br>
+                <br>
+            </form>
+            <p id="textwaiting">Generating text. Please wait for the results...</p>
 
-       </div>
+            <div class="flexbox" id="loadercontainer">
+              <div class="loader"></div>
+            </div>
+            <div id="resultscontainer"> 
+            <p id="result" style="white-space:pre-line;">Result will go heree.....</p>
+            </div>  
+
+            </div>
 
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
@@ -59,33 +119,55 @@
         url: "https://gpt-vnyzvq7p2q-uc.a.run.app",
         dataType: "json",
         data: JSON.stringify(getInputValues()),
+        beforeSend: function (data) {
+          console.log("add loading thing");
+          document.getElementById("result").style.display = "none";
+          document.getElementById("textwaiting").style.display = "block";
+          document.getElementById("loadercontainer").style.display = "flex";
+          $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+
+
+          // $('#generate-text').addClass("is-loading");
+          // $('#generate-text').prop("disabled", true);
+        },
         success: function (data) {
+          document.getElementById("resultscontainer").style.display = "block";
+          document.getElementById('result').style.display = "block";
+          document.getElementById('textwaiting').style.display = "none";
+          document.getElementById('loadercontainer').style.display = "none";
+          $('#prefix').val('');
+
          var gentext = data.text;
 	//$('result').text = "";
-	var filtered_text="";
-	var previous = 'i';
-	for (var i = 0;i<gentext.length;i++){
-		if (gentext[i]!=""){
-		filtered_text+=gentext[i]+'\n';	
-		}
-		else if(gentext[i]=="" && previous !=""){
-		filtered_text+='\n';
-		}
-		previous = gentext[i]
-	}	
-	console.log(filtered_text);
-	$('#result').text(filtered_text);	
-         // var html = '<div>' + gentext + '</div>';
-         // $(html).appendTo('body');
-	  console.log(gentext);
-        },
+        var filtered_text="";
+        var previous = 'i';
+        for (var i = 0;i<gentext.length;i++){
+          if (gentext[i]!=""){
+          filtered_text+=gentext[i]+'\n';	
+          }
+          else if(gentext[i]=="" && previous !=""){
+          filtered_text+='\n';
+          }
+          previous = gentext[i]
+        }	
+        console.log(filtered_text);
+        $('#result').text(filtered_text);	
+              // var html = '<div>' + gentext + '</div>';
+              // $(html).appendTo('body');
+          console.log(gentext);
+          $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+              },
         error: function (jqXHR, textStatus, errorThrown) {
-          var html = '<div>There was an error generating the text! Please try again!</div>';
-          $(html).appendTo('body');
-		console.log('error');
+          document.getElementById("resultscontainer").style.display = "block";
+          document.getElementById('result').style.display = "block";
+          document.getElementById('textwaiting').style.display = "none";
+          document.getElementById('loadercontainer').style.display = "none";
+          var error = '<div style="color:red">There was an error generating the text! Please try again!</div>';
+          ('#result').text(error);	
+          console.log('error');
         }
-      });
-    });});
+            });
+          });});
 
   function getInputValues() {
     var inputs = {};
