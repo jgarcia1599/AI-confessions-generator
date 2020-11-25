@@ -13,7 +13,7 @@ import emoji
 import io
 import re
 
-filename = 'cc.txt'
+filename = 'confessions.txt'
 def process_text(text):
     allchars = [str for str in text]
     emoji_list = [c for c in allchars if c in emoji.UNICODE_EMOJI]
