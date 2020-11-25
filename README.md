@@ -26,7 +26,7 @@ python3 script.py
 The finetuned models can be found in *app/checkpoint/run1*.
 
 ### Generating Text with FineTuned Model
-We created an API using [Flask](https://exploreflask.com/en/latest/)to generate text from the finetuned model and return it as a **json** response. To run the api locally:
+We created an API to generate text from the finetuned model and return it as a **json** response. To run the api locally:
 ```
 python3 app/app.py
 ```
