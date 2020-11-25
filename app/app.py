@@ -50,9 +50,7 @@ async def homepage(request):
         generate_count = 0
 
     gc.collect()
-    print('---------------')
     text = re.split('\n', text)
-    print(text)
     return JSONResponse({'text': text},
                          headers=response_header)
 
